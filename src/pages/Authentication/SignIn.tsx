@@ -1,11 +1,49 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
 import LogoDark from '../../images/logo/logo-dark.svg';
 import Logo from '../../images/logo/logo.svg';
 import DefaultLayout from '../../layout/DefaultLayout';
-
+import UserDataAPI from '../../common/Api/UserDataAPI'
+import UserLoginAPI from '../../common/Api/UserLoginAPI'
 const SignIn: React.FC = () => {
+  const [credentials, setcredentials] = useState({ email: "", password: "" });
+  const onChangeHandler = (e: { target: { name: any; value: any; }; }) => {
+    setcredentials({ ...credentials, [e.target.name]: e.target.value });
+  };
+
+  // let userName;
+  const handleSubmit = async (event: { preventDefault: () => void; }) => {
+    event.preventDefault()
+    try {
+      const response = await UserLoginAPI(credentials);
+      const data = response.data;
+
+      if (response.status === 200) {
+        // Login successful
+        localStorage.setItem("token", data.access_token);
+        localStorage.setItem("refresh_token", data.refresh_token);
+        UserDataAPI();
+        // Redirect to the desired page
+        setTimeout(() => {
+          window.location.href = "http://127.0.0.1:5173/";
+        }, 1000);
+      } else if (response.status === 401) {
+        // Handle the case of wrong credentials
+        console.error("Login failed. Please check your credentials.");
+      }
+    } catch (error) {
+      // Handle other errors, such as network errors
+      if (error.response) {
+        // If the error is due to wrong credentials, extract and display the error message
+        const errorMessage = error.response.data.message;
+        console.error(errorMessage);
+      } else {
+        // Handle other errors
+        console.error("An error occurred. Please try again later.");
+      }
+    }
+  };
   return (
     <DefaultLayout>
       <Breadcrumb pageName="Sign In" />
@@ -156,7 +194,7 @@ const SignIn: React.FC = () => {
                 Sign In to TailAdmin
               </h2>
 
-              <form>
+              <form onSubmit={handleSubmit}>
                 <div className="mb-4">
                   <label className="mb-2.5 block font-medium text-black dark:text-white">
                     Email
@@ -164,6 +202,10 @@ const SignIn: React.FC = () => {
                   <div className="relative">
                     <input
                       type="email"
+                      name="email"
+                      required
+                      onChange={onChangeHandler}
+                      value={credentials.email}
                       placeholder="Enter your email"
                       className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
                     />
@@ -190,11 +232,15 @@ const SignIn: React.FC = () => {
 
                 <div className="mb-6">
                   <label className="mb-2.5 block font-medium text-black dark:text-white">
-                    Re-type Password
+                    Password
                   </label>
                   <div className="relative">
                     <input
                       type="password"
+                      name="password"
+                      required
+                      onChange={onChangeHandler}
+                      value={credentials.password}
                       placeholder="6+ Characters, 1 Capital letter"
                       className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
                     />

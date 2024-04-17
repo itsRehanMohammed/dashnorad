@@ -5,7 +5,6 @@ import Loader from './common/Loader';
 import PageTitle from './components/PageTitle';
 import SignIn from './pages/Authentication/SignIn';
 import SignUp from './pages/Authentication/SignUp';
-import Calendar from './pages/Calendar';
 import Chart from './pages/Chart';
 import ECommerce from './pages/Dashboard/ECommerce';
 import FormElements from './pages/Form/FormElements';
@@ -16,6 +15,8 @@ import Settings from './pages/Settings';
 import Tables from './pages/Tables';
 import Alerts from './pages/UiElements/Alerts';
 import Buttons from './pages/UiElements/Buttons';
+import Orders from './components/Tables/Orders';
+import Products from './components/Tables/Products';
 
 function App() {
   const [loading, setLoading] = useState<boolean>(true);
@@ -43,15 +44,7 @@ function App() {
             </>
           }
         />
-        <Route
-          path="/calendar"
-          element={
-            <>
-              <PageTitle title="Calendar | TailAdmin - Tailwind CSS Admin Dashboard Template" />
-              <Calendar />
-            </>
-          }
-        />
+
         <Route
           path="/profile"
           element={
@@ -67,6 +60,24 @@ function App() {
             <>
               <PageTitle title="Add Product | TailAdmin - Tailwind CSS Admin Dashboard Template" />
               <ProductForm />
+            </>
+          }
+        />
+        <Route
+          path="/orders"
+          element={
+            <>
+              <PageTitle title="Orders | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+              <Orders />
+            </>
+          }
+        />
+        <Route
+          path="/products"
+          element={
+            <>
+              <PageTitle title="Products | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+              <Products />
             </>
           }
         />
