@@ -138,6 +138,9 @@ const Orders = () => {
                       Price
                     </th>
                     <th className="min-w-[120px] py-4 px-4 font-medium text-black dark:text-white">
+                      Delivery Status
+                    </th>
+                    <th className="min-w-[120px] py-4 px-4 font-medium text-black dark:text-white">
                       Payment Status
                     </th>
                   </tr>
@@ -159,6 +162,9 @@ const Orders = () => {
                         </td>
                         <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                           <p className="text-black dark:text-white">₹{item.price}</p>
+                        </td>
+                        <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+                          <p className="text-black dark:text-white">{item.status}</p>
                         </td>
                         <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                           <p className="text-sm text-meta-3">Done</p>
