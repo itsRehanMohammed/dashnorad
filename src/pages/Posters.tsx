@@ -6,8 +6,22 @@ import axios from 'axios'; // Import Axios
 const Posters = () => {
     const [categories, setCategories] = useState([]);
     const [slides, setSlides] = useState([]);
-    const [categoryFormData, setCategoryFormData] = useState({ name: '', img: { name: "", url: "" }, srNo: '', path: '' });
-    const [slideFormData, setSlideFormData] = useState({ name: '', img: { name: "", url: "" }, srNo: '', path: '' });
+    const [isEditSlide, setIsEditSlide] = useState(false);
+    const [isEditCategory, setIsEditCategory] = useState(false);
+    const [categoryFormData, setCategoryFormData] = useState({
+        name: '',
+        img: { name: '', url: '' },
+        srNo: '',
+        path: '',
+    });
+    const [slideFormData, setSlideFormData] = useState({
+        name: '',
+        img: { name: '', url: '' },
+        srNo: '',
+        path: '',
+    });
+    const [slideId, setSlideId] = useState('');
+    const [categoryId, setCategoryId] = useState('');
 
     useEffect(() => {
         // Fetch existing categories and slides on component mount
@@ -24,12 +38,22 @@ const Posters = () => {
         }
     };
     const clearCategoryFormData = () => {
-        setCategoryFormData({ name: '', img: { name: "", url: "" }, srNo: '', path: '' });
-    }
+        setCategoryFormData({
+            name: '',
+            img: { name: '', url: '' },
+            srNo: '',
+            path: '',
+        });
+    };
     const clearSlideFormData = () => {
-        setSlideFormData({ name: '', img: { name: "", url: "" }, srNo: '', path: '' });
-    }
-    const handleAddCategory = async (e) => {
+        setSlideFormData({
+            name: '',
+            img: { name: '', url: '' },
+            srNo: '',
+            path: '',
+        });
+    };
+    const handleAddCategory = async (e: { preventDefault: () => void }) => {
         e.preventDefault();
         try {
             // Extract image URL from categoryFormData
@@ -37,12 +61,17 @@ const Posters = () => {
             const { url } = img;
 
             // Send only the image URL to the backend
-            await axios.post('http://localhost:5000/api/category', { ...formDataWithoutImage, img: url }, {
-                headers: {
-                    Authorization: `Bearer ${localStorage.getItem("token")}`, // Authorization token
-                    user: localStorage.getItem("role"), // User role
+            await axios.post(
+                'http://localhost:5000/api/category',
+                { ...formDataWithoutImage, img: url },
+                {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem('token')}`, // Authorization token
+                        user: localStorage.getItem('role'), // User role
+                    },
                 },
-            });
+            );
+            window.alert('Category added succesfully');
 
             await fetchPosters();
 
@@ -53,8 +82,7 @@ const Posters = () => {
         }
     };
 
-
-    const handleAddSlide = async (e) => {
+    const handleAddSlide = async (e: { preventDefault: () => void }) => {
         e.preventDefault();
         try {
             // Extract image URL from slideFormData
@@ -67,12 +95,13 @@ const Posters = () => {
                 { ...formDataWithoutImage, img: url },
                 {
                     headers: {
-                        Authorization: `Bearer ${localStorage.getItem("token")}`, // Authorization token
-                        user: localStorage.getItem("role"), // User role
+                        Authorization: `Bearer ${localStorage.getItem('token')}`, // Authorization token
+                        user: localStorage.getItem('role'), // User role
                     },
-                }
+                },
             );
-
+            window.alert('Slide added succesfully');
+            await fetchPosters();
             // Clear slide form data after adding
             clearSlideFormData();
         } catch (error) {
@@ -80,7 +109,101 @@ const Posters = () => {
         }
     };
 
-    const handleCategoryImageChange = (e) => {
+    const handleEditSlide = (event: any, slide: any) => {
+        event.preventDefault();
+        setIsEditSlide(true);
+        const { name, path, srNo, img, _id } = slide;
+
+        // Assuming slideFormData contains properties for name, path, srNo, and img
+        setSlideFormData({
+            name,
+            path,
+            srNo,
+            img: {
+                name: img,
+                url: img,
+            },
+        });
+        setSlideId(_id);
+    };
+
+    const editSlideHandler = async (e: { preventDefault: () => void }) => {
+        e.preventDefault();
+        try {
+            // Extract image URL from slideFormData
+            const { img, ...formDataWithoutImage } = slideFormData;
+            const { url } = img;
+
+            // Send only the image URL to the backend
+            await axios.put(
+                `http://localhost:5000/api/slide/${slideId}`,
+                { ...formDataWithoutImage, img: url },
+                {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem('token')}`, // Authorization token
+                        user: localStorage.getItem('role'), // User role
+                    },
+                },
+            );
+            window.alert('Slide edited succesfully');
+            await fetchPosters();
+            // Clear slide form data after adding
+            clearSlideFormData();
+        } catch (error) {
+            console.error('Error editing slide:', error);
+        }
+    };
+
+    const handleEditCategory = (event: any, category: any) => {
+        event.preventDefault();
+
+        setIsEditCategory(true);
+        const { name, path, srNo, img, _id } = category;
+
+        // Assuming slideFormData contains properties for name, path, srNo, and img
+        setCategoryFormData({
+            name,
+            path,
+            srNo,
+            img: {
+                name: img,
+                url: img,
+            },
+        });
+        setCategoryId(_id);
+
+    };
+
+    const editCategoryHandler = async (e: { preventDefault: () => void }) => {
+        e.preventDefault();
+        try {
+            // Extract image URL from categoryFormData
+            const { img, ...formDataWithoutImage } = categoryFormData;
+            const { url } = img;
+
+            // Send only the image URL to the backend
+            await axios.put(
+                `http://localhost:5000/api/category/${categoryId}`,
+                { ...formDataWithoutImage, img: url },
+                {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem('token')}`, // Authorization token
+                        user: localStorage.getItem('role'), // User role
+                    },
+                },
+            );
+            window.alert('Category edited succesfully');
+
+            await fetchPosters();
+
+            // Clear category form data after adding
+            clearCategoryFormData();
+        } catch (error) {
+            console.error('Error edited category:', error);
+        }
+    };
+
+    const handleCategoryImageChange = (e: { target: { files: null[] } }) => {
         const file = e.target.files?.[0] || null;
         if (file) {
             const reader = new FileReader();
@@ -95,7 +218,7 @@ const Posters = () => {
         }
     };
 
-    const handleSlideImageChange = (e) => {
+    const handleSlideImageChange = (e: { target: { files: null[] } }) => {
         const file = e.target.files?.[0] || null;
         if (file) {
             const reader = new FileReader();
@@ -109,23 +232,64 @@ const Posters = () => {
             reader.readAsDataURL(file);
         }
     };
-    console.log({ slides, categories });
-    const handleEditSlide = ((slide: any) => {
-        console.log(slide);
 
+    const handleDeleteSlide = async (
+        event: Event | undefined,
+        _slideId: string,
+    ) => {
+        event?.preventDefault();
+        try {
+            const response = await axios.delete(
+                `http://localhost:5000/api/slide/${_slideId}`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem('token')}`,
+                        user: localStorage.getItem('role'),
+                    },
+                },
+            );
+            if (response.data.success) {
+                setSlides((prevSlides) =>
+                    prevSlides.filter((slide) => slide._id !== _slideId),
+                );
 
-    })
-    const handleEditCategory = ((category: any) => {
-        console.log(category);
-
-
-    })
-
-
-    const handleDeleteButtonClick = (slideId: string) => {
-        console.log(slideId);
-
+                window.alert(response.data.message);
+            } else {
+                throw new Error('Failed to delete slide');
+            }
+        } catch (error) {
+            console.error('Error deleting slide:', error);
+        }
     };
+    const handleDeleteCategory = async (
+        event: Event | undefined,
+        _categoryId: string,
+    ) => {
+        event?.preventDefault();
+        try {
+            const response = await axios.delete(
+                `http://localhost:5000/api/category/${_categoryId}`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem('token')}`,
+                        user: localStorage.getItem('role'),
+                    },
+                },
+            );
+            if (response.data.success) {
+                setCategories((prevCategories) =>
+                    prevCategories.filter((cat) => cat._id !== _categoryId),
+                );
+
+                window.alert(response.data.message);
+            } else {
+                throw new Error('Failed to delete Category');
+            }
+        } catch (error) {
+            console.error('Error deleting Category:', error);
+        }
+    };
+
     return (
         <DefaultLayout>
             <Breadcrumb pageName="Posters" />
@@ -135,24 +299,30 @@ const Posters = () => {
                     <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
                         <div className="border-b border-stroke py-4 px-7 dark:border-strokedark">
                             <h3 className="font-medium text-black dark:text-white">
-                                Add Slide
+                                {isEditSlide ? 'Edit' : 'Add'} Slide
                             </h3>
                         </div>
                         <div className="p-7">
-                            <form onSubmit={handleAddSlide}>
+                            <form onSubmit={isEditSlide ? editSlideHandler : handleAddSlide}>
                                 {/* Slide Image */}
-                                {slideFormData.img.url ? (
-                                    <img
-                                        src={slideFormData.img.url}
-                                        alt="Selected Image"
-                                        className="object-cover overflow-hidden mb-5.5"
-                                    />
-                                ) : (
-                                    <div
-                                        id="FileUpload"
-                                        className="relative mb-5.5 block w-full cursor-pointer appearance-none rounded border border-dashed border-primary bg-gray py-4 px-4 dark:bg-meta-4 sm:py-7.5"
-                                    >
 
+                                <div
+                                    id="FileUpload"
+                                    className="relative mb-5.5 block w-full cursor-pointer appearance-none rounded border border-dashed border-primary bg-gray py-4 px-4 dark:bg-meta-4 sm:py-7.5"
+                                >
+                                    <input
+                                        type="file"
+                                        accept="image/*"
+                                        className="absolute inset-0 z-50 m-0 h-full w-full cursor-pointer p-0 opacity-0 outline-none"
+                                        onChange={handleSlideImageChange}
+                                    />
+                                    {slideFormData.img.url ? (
+                                        <img
+                                            src={slideFormData.img.url}
+                                            alt="Selected Image"
+                                            className="object-cover overflow-hidden w-32"
+                                        />
+                                    ) : (
                                         <div className="flex flex-col items-center justify-center space-y-3">
                                             <span className="flex h-10 w-10 items-center justify-center rounded-full border border-stroke bg-white dark:border-strokedark dark:bg-boxdark">
                                                 <svg
@@ -189,13 +359,9 @@ const Posters = () => {
                                             <p className="mt-1.5">SVG, PNG, JPG or GIF</p>
                                             <p>(max, 800 X 800px)</p>
                                         </div>
-                                    </div>
-                                )} <input
-                                    type="file"
-                                    accept="image/*"
-                                    className="absolute inset-0 z-50 m-0 h-full w-full cursor-pointer p-0 opacity-0 outline-none"
-                                    onChange={handleSlideImageChange}
-                                />
+                                    )}
+                                </div>
+
                                 {/* Slide Name */}
                                 <div className="mb-5.5">
                                     <label
@@ -211,7 +377,12 @@ const Posters = () => {
                                         id="name"
                                         placeholder="Slide Name"
                                         value={slideFormData.name}
-                                        onChange={(e) => setSlideFormData({ ...slideFormData, name: e.target.value })}
+                                        onChange={(e: { target: { value: any } }) =>
+                                            setSlideFormData({
+                                                ...slideFormData,
+                                                name: e.target.value,
+                                            })
+                                        }
                                     />
                                 </div>
                                 {/* Slide Serial Number */}
@@ -229,7 +400,12 @@ const Posters = () => {
                                         id="srno"
                                         placeholder="eg: 1"
                                         value={slideFormData.srNo}
-                                        onChange={(e) => setSlideFormData({ ...slideFormData, srNo: e.target.value })}
+                                        onChange={(e: { target: { value: any } }) =>
+                                            setSlideFormData({
+                                                ...slideFormData,
+                                                srNo: e.target.value,
+                                            })
+                                        }
                                     />
                                 </div>
                                 {/* Slide Path */}
@@ -247,7 +423,12 @@ const Posters = () => {
                                         id="path"
                                         placeholder="path"
                                         value={slideFormData.path}
-                                        onChange={(e) => setSlideFormData({ ...slideFormData, path: e.target.value })}
+                                        onChange={(e: { target: { value: any } }) =>
+                                            setSlideFormData({
+                                                ...slideFormData,
+                                                path: e.target.value,
+                                            })
+                                        }
                                     />
                                 </div>
                                 {/* Submit Button */}
@@ -263,11 +444,10 @@ const Posters = () => {
                                         className="flex justify-center rounded bg-primary py-2 px-6 font-medium text-gray hover:bg-opacity-90"
                                         type="submit"
                                     >
-                                        Add
+                                        {isEditSlide ? 'Edit' : 'Add'}
                                     </button>
                                 </div>
                             </form>
-
                         </div>
                     </div>
                 </div>
@@ -275,24 +455,34 @@ const Posters = () => {
                     <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
                         <div className="border-b border-stroke py-4 px-7 dark:border-strokedark">
                             <h3 className="font-medium text-black dark:text-white">
-                                Add Category
+                                {isEditCategory ? 'Edit' : 'Add'} Category
                             </h3>
                         </div>
                         <div className="p-7">
-                            <form onSubmit={handleAddCategory}>
+                            <form
+                                onSubmit={
+                                    isEditCategory ? editCategoryHandler : handleAddCategory
+                                }
+                            >
                                 {/* Category Image */}
-                                {categoryFormData.img.url ? (
-                                    <img
-                                        src={categoryFormData.img.url}
-                                        alt="Selected Image"
-                                        className="object-cover overflow-hidden mb-5.5"
-                                    />
-                                ) : (
-                                    <div
-                                        id="FileUpload"
-                                        className="relative mb-5.5 block w-full cursor-pointer appearance-none rounded border border-dashed border-primary bg-gray py-4 px-4 dark:bg-meta-4 sm:py-7.5"
-                                    >
 
+                                <div
+                                    id="FileUpload"
+                                    className="relative mb-5.5 block w-full cursor-pointer appearance-none rounded border border-dashed border-primary bg-gray py-4 px-4 dark:bg-meta-4 sm:py-7.5"
+                                >
+                                    <input
+                                        type="file"
+                                        accept="image/*"
+                                        className="absolute overflow-hidden inset-0 z-50 m-0 h-full w-full cursor-pointer p-0 opacity-0 outline-none"
+                                        onChange={handleCategoryImageChange}
+                                    />
+                                    {categoryFormData.img.url ? (
+                                        <img
+                                            src={categoryFormData.img.url}
+                                            alt="Selected Image"
+                                            className="object-cover overflow-hidden"
+                                        />
+                                    ) : (
                                         <div className="flex flex-col items-center justify-center space-y-3">
                                             <span className="flex h-10 w-10 items-center justify-center rounded-full border border-stroke bg-white dark:border-strokedark dark:bg-boxdark">
                                                 <svg
@@ -329,14 +519,9 @@ const Posters = () => {
                                             <p className="mt-1.5">SVG, PNG, JPG or GIF</p>
                                             <p>(max, 800 X 800px)</p>
                                         </div>
-                                    </div>
-                                )}
-                                <input
-                                    type="file"
-                                    accept="image/*"
-                                    className="absolute inset-0 z-50 m-0 h-full w-full cursor-pointer p-0 opacity-0 outline-none"
-                                    onChange={handleCategoryImageChange}
-                                />
+                                    )}
+                                </div>
+
                                 {/* Category Name */}
                                 <div className="mb-5.5">
                                     <label
@@ -352,7 +537,12 @@ const Posters = () => {
                                         id="name"
                                         placeholder="Category Name"
                                         value={categoryFormData.name}
-                                        onChange={(e) => setCategoryFormData({ ...categoryFormData, name: e.target.value })}
+                                        onChange={(e: { target: { value: any } }) =>
+                                            setCategoryFormData({
+                                                ...categoryFormData,
+                                                name: e.target.value,
+                                            })
+                                        }
                                     />
                                 </div>
                                 {/* Category Serial Number */}
@@ -370,7 +560,12 @@ const Posters = () => {
                                         id="srno"
                                         placeholder="eg: 1"
                                         value={categoryFormData.srNo}
-                                        onChange={(e) => setCategoryFormData({ ...categoryFormData, srNo: e.target.value })}
+                                        onChange={(e: { target: { value: any } }) =>
+                                            setCategoryFormData({
+                                                ...categoryFormData,
+                                                srNo: e.target.value,
+                                            })
+                                        }
                                     />
                                 </div>
                                 {/* Category Path */}
@@ -388,7 +583,12 @@ const Posters = () => {
                                         id="path"
                                         placeholder="path"
                                         value={categoryFormData.path}
-                                        onChange={(e) => setCategoryFormData({ ...categoryFormData, path: e.target.value })}
+                                        onChange={(e: { target: { value: any } }) =>
+                                            setCategoryFormData({
+                                                ...categoryFormData,
+                                                path: e.target.value,
+                                            })
+                                        }
                                     />
                                 </div>
                                 {/* Submit Button */}
@@ -396,15 +596,23 @@ const Posters = () => {
                                     <button
                                         className="flex justify-center rounded  py-2 px-6 font-medium text-black hover:shadow-1 dark:border-strokedark dark:text-white"
                                         type="button"
-                                        onClick={() => setCategoryFormData({ name: '', img: { name: "", url: "" }, srNo: '', path: '' })}
+                                        onClick={() =>
+                                            setCategoryFormData({
+                                                name: '',
+                                                img: { name: '', url: '' },
+                                                srNo: '',
+                                                path: '',
+                                            })
+                                        }
                                     >
                                         Clear
                                     </button>
+
                                     <button
                                         className="flex justify-center rounded bg-primary py-2 px-6 font-medium text-gray hover:bg-opacity-90"
                                         type="submit"
                                     >
-                                        Add
+                                        {isEditCategory ? 'Edit' : 'Add'}
                                     </button>
                                 </div>
                             </form>
@@ -421,26 +629,46 @@ const Posters = () => {
                         <div className="p-7">
                             <form action="#">
                                 <div className="mb-4 flex-col items-center gap-3">
-
-                                    {slides.map((slide) => (
-                                        <div key={slide.id} className="mb-4 flex-col items-center gap-3">
+                                    {slides.map((slide, _index) => (
+                                        <div
+                                            key={slide.id}
+                                            className="flex rounded-lg bg-white dark:bg-boxdark  flex-row  mb-3"
+                                        >
                                             <img
                                                 src={slide.img}
                                                 alt={slide.name}
-                                                className="object-cover w-full h-40 mb-3"
+                                                className="h-24 w-28 rounded-md border object-cover object-center"
                                             />
-                                            <p>Name: {slide.name}</p>
-                                            <p>Path: {slide.path}</p>
-                                            <p>Sr.no: {slide.srNo}</p>
-                                            <div className="flex justify-center gap-2">
-                                                <button className="hover:text-primary" onClick={() => handleEditSlide(slide)} >
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-pencil-square" viewBox="0 0 16 16">
+                                            <div className="flex flex-col flex-grow px-4">
+                                                <span className="font-semibold">{slide.name}</span>
+                                                <span className="float-right text-gray-400 text-[14px]">
+                                                    {slide.path} - {slide.srNo}
+                                                </span>
+                                            </div>
+                                            <div className="flex items-center gap-2">
+                                                <button
+                                                    className="hover:text-primary"
+                                                    onClick={() => handleEditSlide(event, slide)}
+                                                >
+                                                    <svg
+                                                        xmlns="http://www.w3.org/2000/svg"
+                                                        width="16"
+                                                        height="16"
+                                                        fill="currentColor"
+                                                        className="bi bi-pencil-square"
+                                                        viewBox="0 0 16 16"
+                                                    >
                                                         <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
-                                                        <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z" />
+                                                        <path
+                                                            fill-rule="evenodd"
+                                                            d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"
+                                                        />
                                                     </svg>
                                                 </button>
-
-                                                <button className="hover:text-primary" onClick={() => handleDeleteButtonClick(slide._id)}>
+                                                <button
+                                                    className="hover:text-primary"
+                                                    onClick={() => handleDeleteSlide(event, slide._id)}
+                                                >
                                                     <svg
                                                         className="fill-current"
                                                         width="18"
@@ -471,10 +699,6 @@ const Posters = () => {
                                         </div>
                                     ))}
                                 </div>
-
-
-
-
                             </form>
                         </div>
                     </div>
@@ -490,26 +714,48 @@ const Posters = () => {
                         <div className="p-7">
                             <form action="#">
                                 <div className="mb-4 flex-col items-center gap-3">
-
                                     {categories.map((category) => (
-                                        <div key={category.id} className="mb-4 flex-col items-center gap-3">
+                                        <div
+                                            key={category.id}
+                                            className="flex rounded-lg bg-white dark:bg-boxdark  flex-row  mb-3"
+                                        >
                                             <img
                                                 src={category.img}
                                                 alt={category.name}
-                                                className="object-cover w-full h-40 mb-3"
+                                                className="h-24 w-28 rounded-md border object-cover object-center"
                                             />
-                                            <p>Name: {category.name}</p>
-                                            <p>Path: {category.path}</p>
-                                            <p>Sr.no: {category.srNo}</p>
-                                            <div className="flex justify-center gap-2">
-                                                <button className="hover:text-primary" onClick={() => handleEditCategory(category)} >
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-pencil-square" viewBox="0 0 16 16">
+                                            <div className="flex flex-col flex-grow px-4">
+                                                <span className="font-semibold">{category.name}</span>
+                                                <span className="float-right text-gray-400 text-[14px]">
+                                                    {category.path} - {category.srNo}
+                                                </span>
+                                            </div>
+                                            <div className="flex items-center gap-2">
+                                                <button
+                                                    className="hover:text-primary"
+                                                    onClick={() => handleEditCategory(event, category)}
+                                                >
+                                                    <svg
+                                                        xmlns="http://www.w3.org/2000/svg"
+                                                        width="16"
+                                                        height="16"
+                                                        fill="currentColor"
+                                                        className="bi bi-pencil-square"
+                                                        viewBox="0 0 16 16"
+                                                    >
                                                         <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
-                                                        <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z" />
+                                                        <path
+                                                            fill-rule="evenodd"
+                                                            d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"
+                                                        />
                                                     </svg>
                                                 </button>
-
-                                                <button className="hover:text-primary" onClick={() => handleDeleteButtonClick(category._id)}>
+                                                <button
+                                                    className="hover:text-primary"
+                                                    onClick={() =>
+                                                        handleDeleteCategory(event, category._id)
+                                                    }
+                                                >
                                                     <svg
                                                         className="fill-current"
                                                         width="18"
@@ -540,10 +786,6 @@ const Posters = () => {
                                         </div>
                                     ))}
                                 </div>
-
-
-
-
                             </form>
                         </div>
                     </div>

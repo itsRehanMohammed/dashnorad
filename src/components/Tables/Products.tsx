@@ -6,7 +6,7 @@ import { NavLink, useLocation } from 'react-router-dom';
 import ProductForm from '../../pages/ProductForm';
 
 
-const ConfirmDeleteModal = ({ isOpen, onCancel, onDelete }) => {
+export const ConfirmDeleteModal = ({ isOpen, onCancel, onDelete }) => {
   return (
     <div className={`fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center ${isOpen ? 'visible' : 'hidden'}`}>
       <div className="bg-white p-8 rounded-md shadow-md">
