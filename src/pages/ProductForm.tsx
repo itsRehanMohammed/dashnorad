@@ -129,7 +129,7 @@ const ProductForm: React.FC = ({ product, handleClearEditProduct }) => {
         }
     };
 
-    const handleClear = (e: ChangeEvent<HTMLInputElement>) => {
+    const handleClear = () => {
         setFormData({
             name: '',
             category: [],
@@ -199,7 +199,45 @@ const ProductForm: React.FC = ({ product, handleClearEditProduct }) => {
             alert('Failed to add product. Please try again later.');
         }
     };
-    console.log({ product });
+    const handleEditProductSubmit = async (e: FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        console.log({ formData });
+
+        try {
+            const formattedCategories = generateUniqueIds(formData.category);
+
+            const formDataToSend = {
+                name: formData.name,
+                category: formattedCategories,
+                image: formData.image?.url || formData.image,
+                size: formData.size,
+
+                price: parseFloat(formData.price),
+                description: formData.description,
+                couponCode: formData.couponCode,
+                isNew: formData.isNew,
+                isPopular: formData.isPopular,
+                isTrending: formData.isTrending,
+            };
+
+            const response = await fetch(`http://localhost:5000/api/products/${formData._id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formDataToSend),
+            });
+
+            if (response.ok) {
+                alert('Product edited successfully!');
+            } else {
+                throw new Error('Failed to edit product');
+            }
+        } catch (error) {
+            console.error('Error editing product:', error);
+            alert('Failed to edit product. Please try again later.');
+        }
+    };
 
     return (
         <>
@@ -207,7 +245,7 @@ const ProductForm: React.FC = ({ product, handleClearEditProduct }) => {
                 <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark py-4">
                     <button onClick={handleClearEditProduct} className="mx-6" > ⬅ Go back</button>
                     <form
-                        onSubmit={handleSubmit}
+                        onSubmit={handleEditProductSubmit}
                         className="mx-auto max-w-2xl text-black dark:text-white mt-10"
                     >
                         <div className="mb-5 ">

@@ -12,19 +12,16 @@ const OrderDetails = ({ selectedOrder, userDetails }) => {
   const handleStatusChange = async (e) => {
     const newStatus = e.target.value;
     setDeliveryStatus(newStatus);
+    console.log({ selectedOrder, userDetails });
 
     try {
       // Send a PUT request to update the delivery status
       await axios.put(
-        `http://localhost:5000/api/order/${selectedOrder._id}`,
-        [{
-          price: selectedOrder.price,
-          productImage: selectedOrder.productImage,
-          productName: selectedOrder.productName,
-
-          quantity: selectedOrder.quantity,
+        `http://localhost:5000/api/order/${userDetails._id}`,
+        {
+          orderItemId: selectedOrder._id,
           status: newStatus
-        }], // Request body containing updated status and userDetails
+        }, // Request body containing updated status and userDetails
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`, // Authorization token
