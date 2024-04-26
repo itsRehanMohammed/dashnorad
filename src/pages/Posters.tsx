@@ -294,7 +294,7 @@ const Posters = () => {
         <DefaultLayout>
             <Breadcrumb pageName="Posters" />
 
-            <div className="grid grid-cols-2 gap-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
                 <div className="sm:grid-cols-2">
                     <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
                         <div className="border-b border-stroke py-4 px-7 dark:border-strokedark">

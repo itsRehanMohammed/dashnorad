@@ -106,7 +106,7 @@ const Products = () => {
               </NavLink>
             </div>
 
-            <div className="grid grid-cols-6 border-t border-stroke py-4.5 px-4 dark:border-strokedark sm:grid-cols-8 md:px-6 2xl:px-7.5">
+            <div className="grid 2xl:grid-cols-6 grid-cols-4  border-t border-stroke py-4.5 px-4 dark:border-strokedark sm:grid-cols-8 md:px-6 2xl:px-7.5">
               <div className="col-span-2 flex items-center">
                 <p className="font-medium">Product Name</p>
               </div>
@@ -116,7 +116,7 @@ const Products = () => {
               <div className="col-span-1 flex items-center">
                 <p className="font-medium">Price</p>
               </div>
-              <div className="col-span-1 flex items-center">
+              <div className=" hidden sm:flex col-span-1  items-center">
                 <p className="font-medium">Sold</p>
               </div>
               <div className="col-span-1 flex items-center">
@@ -126,7 +126,7 @@ const Products = () => {
 
             {productData.map((product, key) => (
               <div
-                className="grid grid-cols-6 border-t border-stroke py-4.5 px-4 dark:border-strokedark sm:grid-cols-8 md:px-6 2xl:px-7.5"
+                className="grid 2xl:grid-cols-6 grid-cols-4 border-t border-stroke py-4.5 px-4 dark:border-strokedark sm:grid-cols-8 md:px-6 2xl:px-7.5"
                 key={key}
               >
                 <div className="col-span-2 flex items-center">
@@ -139,7 +139,7 @@ const Products = () => {
                     </p>
                   </div>
                 </div>
-                <div className="col-span-3 hidden items-center sm:flex">
+                <div className="   col-span-3 hidden items-center sm:flex">
                   <p className="text-sm text-black dark:text-white">
                     {product.category.map((cat) => cat.name).join(', ')}
                   </p>
@@ -149,7 +149,7 @@ const Products = () => {
                     ₹{product.price}
                   </p>
                 </div>
-                <div className="col-span-1 flex items-center">
+                <div className=" hidden sm:flex col-span-1 items-center">
                   <p className="text-sm text-black dark:text-white">{product.sold}</p>
                 </div>
                 <div className="col-span-1 flex items-center">

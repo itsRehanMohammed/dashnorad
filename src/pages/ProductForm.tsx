@@ -246,7 +246,7 @@ const ProductForm: React.FC = ({ product, handleClearEditProduct }) => {
                     <button onClick={handleClearEditProduct} className="mx-6" > ⬅ Go back</button>
                     <form
                         onSubmit={handleEditProductSubmit}
-                        className="mx-auto max-w-2xl text-black dark:text-white mt-10"
+                        className="mx-5 sm:mx-auto max-w-2xl text-black dark:text-white mt-10"
                     >
                         <div className="mb-5 ">
                             <TextField
@@ -451,7 +451,7 @@ const ProductForm: React.FC = ({ product, handleClearEditProduct }) => {
                     <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark py-4">
                         <form
                             onSubmit={handleSubmit}
-                            className="mx-auto max-w-2xl text-black dark:text-white mt-10"
+                            className="mx-5 sm:mx-auto  max-w-2xl text-black dark:text-white mt-10"
                         >
                             <div className="mb-5 ">
                                 <TextField
