@@ -122,7 +122,7 @@ const Orders = () => {
               <table className="w-full table-auto">
                 <thead>
                   <tr className="bg-gray-2 text-left dark:bg-meta-4">
-                    <th className="hidden sm:block min-w-[120px] sm:min-w-[220px] py-4 px-4 font-medium text-black dark:text-white xl:pl-11">
+                    <th className="hidden sm:table-cell min-w-[120px] sm:min-w-[220px] py-4 px-4 font-medium text-black dark:text-white xl:pl-11">
                       Product Name
                     </th>
                     <th className=" min-w-[130px] sm:min-w-[220px] py-4  px-4 font-medium text-black dark:text-white xl:pl-11">
@@ -131,13 +131,13 @@ const Orders = () => {
                     <th className="min-w-[100px] sm:min-w-[150px] py-4  px-4 font-medium text-black dark:text-white">
                       Quantity
                     </th>
-                    <th className="hidden sm:block min-w-[120px] py-4 px-4 font-medium text-black dark:text-white">
+                    <th className="hidden sm:table-cell min-w-[120px] py-4 px-4 font-medium text-black dark:text-white">
                       Price
                     </th>
                     <th className="min-w-[150px] py-4  px-4 font-medium text-black dark:text-white">
                       {window.innerWidth < 500 ? "Status" : "Delivery Status"}
                     </th>
-                    <th className=" hidden sm:block min-w-[120px] py-4 px-4 font-medium text-black dark:text-white">
+                    <th className=" hidden sm:table-cell min-w-[120px] py-4 px-4 font-medium text-black dark:text-white">
                       Payment Status
                     </th>
                   </tr>
@@ -146,7 +146,7 @@ const Orders = () => {
                   {orderData.map((order, index) => (
                     order.orders.map((item, key) => (
                       <tr key={key} onClick={() => openOrderSummary(item, order)} className="cursor-pointer">
-                        <td className=" hidden sm:block border-b border-[#eee] py-5 px-4 pl-9 dark:border-strokedark xl:pl-11">
+                        <td className=" hidden sm:table-cell border-b border-[#eee] py-5 px-4 pl-9 dark:border-strokedark xl:pl-11">
                           <h5 className="font-medium text-black dark:text-white">
                             {item.productName}
                           </h5>
@@ -157,13 +157,13 @@ const Orders = () => {
                         <td className="border-b border-[#eee] py-5 px-8 dark:border-strokedark">
                           <p className="text-black dark:text-white">{item.quantity}</p>
                         </td>
-                        <td className="hidden sm:block border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+                        <td className="hidden sm:table-cell border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                           <p className="text-black dark:text-white">₹{item.price}</p>
                         </td>
                         <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                           <p className="text-black dark:text-white">{item.status}</p>
                         </td>
-                        <td className="hidden sm:block border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+                        <td className="hidden sm:table-cell border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                           <p className="text-sm text-meta-3">Done</p>
                         </td>
                       </tr>
