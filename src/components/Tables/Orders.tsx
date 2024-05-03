@@ -19,7 +19,7 @@ const OrderDetails = ({ selectedOrder, userDetails }) => {
       await axios.put(
         `http://localhost:5000/api/order/${userDetails._id}`,
         {
-          orderItemId: selectedOrder._id,
+          orderId: selectedOrder._id,
           status: newStatus
         }, // Request body containing updated status and userDetails
         {

@@ -37,6 +37,7 @@ interface FormData {
     isNew: boolean;
     isPopular: boolean;
     isTrending: boolean;
+    quantity: number;
 }
 
 const ProductForm: React.FC = ({ product, handleClearEditProduct }) => {
@@ -53,6 +54,7 @@ const ProductForm: React.FC = ({ product, handleClearEditProduct }) => {
         isNew: false,
         isPopular: false,
         isTrending: false,
+        quantity: 1,
     });
     useEffect(() => {
         if (product) {
@@ -143,6 +145,7 @@ const ProductForm: React.FC = ({ product, handleClearEditProduct }) => {
             isNew: false,
             isPopular: false,
             isTrending: false,
+            quantity: 1,
         });
     };
     // Function to generate unique IDs for each category
@@ -173,6 +176,7 @@ const ProductForm: React.FC = ({ product, handleClearEditProduct }) => {
                 size: formData.size,
                 reviews: formData.reviews,
                 price: parseFloat(formData.price),
+                quantity: parseFloat(formData.quantity),
                 description: formData.description,
                 couponCode: formData.couponCode,
                 isNew: formData.isNew,
@@ -213,6 +217,7 @@ const ProductForm: React.FC = ({ product, handleClearEditProduct }) => {
                 size: formData.size,
 
                 price: parseFloat(formData.price),
+                quantity: parseFloat(formData.quantity),
                 description: formData.description,
                 couponCode: formData.couponCode,
                 isNew: formData.isNew,
@@ -243,7 +248,7 @@ const ProductForm: React.FC = ({ product, handleClearEditProduct }) => {
         <>
             {product ? (
                 <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark py-4">
-                    <button onClick={handleClearEditProduct} className="mx-6" > ⬅ Go back</button>
+                    <button onClick={handleClearEditProduct} className="mx-6" > ⬅ back</button>
                     <form
                         onSubmit={handleEditProductSubmit}
                         className="mx-5 sm:mx-auto max-w-2xl text-black dark:text-white mt-10"
@@ -328,30 +333,50 @@ const ProductForm: React.FC = ({ product, handleClearEditProduct }) => {
                                 required
                             />
                         </div>
-                        <div className="mb-5">
-                            <FormControl fullWidth>
-                                <InputLabel className={'dark:text-white '} id="size-label">
-                                    Size *
-                                </InputLabel>
-                                <Select
-                                    labelId="size-label"
-                                    id="size"
-                                    name="size"
-                                    multiple
-                                    value={formData.size}
-                                    onChange={handleSizeChange} // Fix: Pass the handleSizeChange function here
-                                    renderValue={(selected: string[]) => selected.join(', ')}
+                        <div className="flex items-center">
+                            <div className="mb-5 flex-1">
+                                <FormControl fullWidth>
+                                    <InputLabel className={'dark:text-white '} id="size-label">
+                                        Size *
+                                    </InputLabel>
+                                    <Select
+                                        labelId="size-label"
+                                        id="size"
+                                        name="size"
+                                        multiple
+                                        value={formData.size}
+                                        onChange={handleSizeChange} // Fix: Pass the handleSizeChange function here
+                                        renderValue={(selected: string[]) => selected.join(', ')}
+                                        required
+                                        className="disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+                                    >
+                                        {['S', 'M', 'L', 'XL'].map((size) => (
+                                            <MenuItem key={size} value={size}>
+                                                <Checkbox checked={formData.size.indexOf(size) > -1} />
+                                                <ListItemText primary={size} />
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                </FormControl>
+                            </div>
+                            <div className="mb-5 ml-2 flex-1">
+                                <TextField
+                                    InputLabelProps={{
+                                        className: 'text-black dark:text-white',
+                                    }}
+                                    InputProps={{
+                                        className:
+                                            'disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary',
+                                    }}
+                                    fullWidth
+                                    label="Quantity"
+                                    name="quantity"
+                                    type="number"
+                                    value={formData.quantity}
+                                    onChange={handleChange}
                                     required
-                                    className="disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
-                                >
-                                    {['S', 'M', 'L', 'XL'].map((size) => (
-                                        <MenuItem key={size} value={size}>
-                                            <Checkbox checked={formData.size.indexOf(size) > -1} />
-                                            <ListItemText primary={size} />
-                                        </MenuItem>
-                                    ))}
-                                </Select>
-                            </FormControl>
+                                />
+                            </div>
                         </div>
                         <div className="mb-5">
                             <TextField
@@ -533,30 +558,50 @@ const ProductForm: React.FC = ({ product, handleClearEditProduct }) => {
                                     required
                                 />
                             </div>
-                            <div className="mb-5">
-                                <FormControl fullWidth>
-                                    <InputLabel className={'dark:text-white '} id="size-label">
-                                        Size *
-                                    </InputLabel>
-                                    <Select
-                                        labelId="size-label"
-                                        id="size"
-                                        name="size"
-                                        multiple
-                                        value={formData.size}
-                                        onChange={handleSizeChange} // Fix: Pass the handleSizeChange function here
-                                        renderValue={(selected: string[]) => selected.join(', ')}
+                            <div className="flex items-center">
+                                <div className="mb-5 flex-1">
+                                    <FormControl fullWidth>
+                                        <InputLabel className={'dark:text-white '} id="size-label">
+                                            Size *
+                                        </InputLabel>
+                                        <Select
+                                            labelId="size-label"
+                                            id="size"
+                                            name="size"
+                                            multiple
+                                            value={formData.size}
+                                            onChange={handleSizeChange} // Fix: Pass the handleSizeChange function here
+                                            renderValue={(selected: string[]) => selected.join(', ')}
+                                            required
+                                            className="disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+                                        >
+                                            {['S', 'M', 'L', 'XL'].map((size) => (
+                                                <MenuItem key={size} value={size}>
+                                                    <Checkbox checked={formData.size.indexOf(size) > -1} />
+                                                    <ListItemText primary={size} />
+                                                </MenuItem>
+                                            ))}
+                                        </Select>
+                                    </FormControl>
+                                </div>
+                                <div className="mb-5 ml-2 flex-1">
+                                    <TextField
+                                        InputLabelProps={{
+                                            className: 'text-black dark:text-white',
+                                        }}
+                                        InputProps={{
+                                            className:
+                                                'disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary',
+                                        }}
+                                        fullWidth
+                                        label="Quantity"
+                                        name="quantity"
+                                        type="number"
+                                        value={formData.quantity}
+                                        onChange={handleChange}
                                         required
-                                        className="disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
-                                    >
-                                        {['S', 'M', 'L', 'XL'].map((size) => (
-                                            <MenuItem key={size} value={size}>
-                                                <Checkbox checked={formData.size.indexOf(size) > -1} />
-                                                <ListItemText primary={size} />
-                                            </MenuItem>
-                                        ))}
-                                    </Select>
-                                </FormControl>
+                                    />
+                                </div>
                             </div>
                             <div className="mb-5">
                                 <TextField
