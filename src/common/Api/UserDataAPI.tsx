@@ -2,7 +2,7 @@ import axios from "axios";
 
 const userData = async () => {
     try {
-        const response = await axios.get("https://dukan.onrender.com/api/me", {
+        const response = await axios.get("http://localhost:5000/api/me", {
             headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
         });
 

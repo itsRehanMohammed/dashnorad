@@ -164,7 +164,6 @@ const ProductForm: React.FC = ({ product, handleClearEditProduct }) => {
 
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        console.log({ formData });
 
         try {
             const formattedCategories = generateUniqueIds(formData.category);
@@ -188,21 +187,29 @@ const ProductForm: React.FC = ({ product, handleClearEditProduct }) => {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    Authorization: `Bearer ${localStorage.getItem("token")}`, // Authorization token
+                    user: localStorage.getItem("role"), // User role
                 },
+
                 body: JSON.stringify(formDataToSend),
             });
 
             if (response.ok) {
                 handleClear();
                 alert('Product added successfully!');
+            } else if (response.status === 401) {
+                const responseData = await response.json();
+                alert(responseData.message || 'Unauthorized! please check if you have correct access right to add a product');
             } else {
                 throw new Error('Failed to add product');
             }
+
         } catch (error) {
             console.error('Error adding product:', error);
             alert('Failed to add product. Please try again later.');
         }
     };
+
     const handleEditProductSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         console.log({ formData });
@@ -215,7 +222,6 @@ const ProductForm: React.FC = ({ product, handleClearEditProduct }) => {
                 category: formattedCategories,
                 image: formData.image?.url || formData.image,
                 size: formData.size,
-
                 price: parseFloat(formData.price),
                 quantity: parseFloat(formData.quantity),
                 description: formData.description,
@@ -229,12 +235,17 @@ const ProductForm: React.FC = ({ product, handleClearEditProduct }) => {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
+                    Authorization: `Bearer ${localStorage.getItem("token")}`, // Authorization token
+                    user: localStorage.getItem("role"), // User role
                 },
                 body: JSON.stringify(formDataToSend),
             });
 
             if (response.ok) {
                 alert('Product edited successfully!');
+            } else if (response.status === 401) {
+                const responseData = await response.json();
+                alert(responseData.message || 'Unauthorized! please check if you have correct access right to edit a product');
             } else {
                 throw new Error('Failed to edit product');
             }

@@ -2,7 +2,7 @@
 import axios from "axios";
 export const userLogin = async (credentials) => {
     try {
-        const response = await axios.post(`https://dukan.onrender.com/api/login`, {
+        const response = await axios.post(`http://localhost:5000/api/login`, {
             email: credentials.email,
             password: credentials.password,
         });
