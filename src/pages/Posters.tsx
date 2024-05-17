@@ -78,6 +78,11 @@ const Posters = () => {
             // Clear category form data after adding
             clearCategoryFormData();
         } catch (error) {
+            if (error.response && error.response.status === 401) {
+                alert('Unauthorized! Please check if you have correct access right to add a category.');
+            } else {
+                alert('Failed to add the category. Please try again later.');
+            }
             console.error('Error adding category:', error);
         }
     };
@@ -105,6 +110,11 @@ const Posters = () => {
             // Clear slide form data after adding
             clearSlideFormData();
         } catch (error) {
+            if (error.response && error.response.status === 401) {
+                alert('Unauthorized! Please check if you have correct access right to add a slide.');
+            } else {
+                alert('Failed to add the slide. Please try again later.');
+            }
             console.error('Error adding slide:', error);
         }
     };
@@ -150,6 +160,11 @@ const Posters = () => {
             // Clear slide form data after adding
             clearSlideFormData();
         } catch (error) {
+            if (error.response && error.response.status === 401) {
+                alert('Unauthorized! Please check if you have correct access right to edit the slide.');
+            } else {
+                alert('Failed to edit the slide. Please try again later.');
+            }
             console.error('Error editing slide:', error);
         }
     };
@@ -199,6 +214,11 @@ const Posters = () => {
             // Clear category form data after adding
             clearCategoryFormData();
         } catch (error) {
+            if (error.response && error.response.status === 401) {
+                alert('Unauthorized! Please check if you have correct access right to edit the category.');
+            } else {
+                alert('Failed to edit the category. Please try again later.');
+            }
             console.error('Error edited category:', error);
         }
     };
@@ -258,9 +278,15 @@ const Posters = () => {
                 throw new Error('Failed to delete slide');
             }
         } catch (error) {
+            if (error.response && error.response.status === 401) {
+                alert('Unauthorized! Please check if you have correct access right to delete the slide.');
+            } else {
+                alert('Failed to delete the slide. Please try again later.');
+            }
             console.error('Error deleting slide:', error);
         }
     };
+
     const handleDeleteCategory = async (
         event: Event | undefined,
         _categoryId: string,
@@ -286,6 +312,11 @@ const Posters = () => {
                 throw new Error('Failed to delete Category');
             }
         } catch (error) {
+            if (error.response && error.response.status === 401) {
+                alert('Unauthorized! Please check if you have correct access right to delete the Category.');
+            } else {
+                alert('Failed to delete the Category. Please try again later.');
+            }
             console.error('Error deleting Category:', error);
         }
     };
@@ -293,7 +324,6 @@ const Posters = () => {
     return (
         <DefaultLayout>
             <Breadcrumb pageName="Posters" />
-
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
                 <div className="sm:grid-cols-2">
                     <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">

@@ -22,7 +22,7 @@ const OrderDetails = ({ selectedOrder, userDetails }) => {
     console.log({ selectedOrder, userDetails });
 
     try {
-      // Send a PUT request to update the delivery status
+      // Send a PUT request to update the Order status
       await axios.put(
         `http://localhost:5000/api/order/${userDetails._id}`,
         {
@@ -37,13 +37,13 @@ const OrderDetails = ({ selectedOrder, userDetails }) => {
         }
       );
 
-      alert('Delivery status updated successfully!');
+      alert('Order status updated successfully!');
     } catch (error) {
-      console.error('Error updating delivery status:', error);
+      console.error('Error updating Order status:', error);
       if (error.response && error.response.status === 401) {
         alert('Unauthorized! Please check if you have correct access right to update the order.');
       } else {
-        alert('Failed to update delivery status. Please try again later.');
+        alert('Failed to update Order status. Please try again later.');
       }
     }
   };
@@ -62,10 +62,10 @@ const OrderDetails = ({ selectedOrder, userDetails }) => {
               </div>
             </div>
 
-            {/* Dropdown to update delivery status */}
+            {/* Dropdown to update Order status */}
             {selectedOrder.status !== 'cancel' && selectedOrder.status !== 'delivered' ? <div className="mt-4 ">
               <label htmlFor="deliveryStatus" className="block text-sm font-medium text-gray-700">
-                Delivery Status
+                Order Status
               </label>
               <select
                 id="deliveryStatus"
@@ -146,8 +146,8 @@ const Orders = () => {
         item.productName.toLowerCase().includes(searchTerm.toLowerCase())
       ) ||
       order.orders.some((item) =>
-        item._id.toLowerCase().includes(searchTerm.toLowerCase())
-      )
+        item._id.toLowerCase() === searchTerm.toLowerCase()
+      ) || order._id.toLowerCase() === searchTerm.toLowerCase()
     );
   });
 
@@ -232,7 +232,7 @@ const Orders = () => {
                       Price
                     </th>
                     <th className="min-w-[150px] py-4  px-4 font-medium text-black dark:text-white">
-                      {window.innerWidth < 500 ? "Status" : "Delivery Status"}
+                      {window.innerWidth < 500 ? "Status" : "Order Status"}
                     </th>
                     <th className=" hidden sm:table-cell min-w-[120px] py-4 px-4 font-medium text-black dark:text-white">
                       Payment
