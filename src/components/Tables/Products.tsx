@@ -86,11 +86,17 @@ const Products = () => {
     try {
       const response = await fetch(`http://localhost:5000/api/products/${selectedProductId}`, {
         method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${localStorage.getItem("token")}`, // Authorization token
+          user: localStorage.getItem("role"), // User role
+        }
       });
       if (response.ok) {
         // Remove the deleted product from the state
         setProductData(prevData => prevData.filter(product => product._id !== selectedProductId));
         setIsConfirmModalOpen(false);
+        alert("Product removed successfully")
       } else if (response.status === 401) {
         const responseData = await response.json();
         alert(responseData.message || 'Unauthorized! please check if you have correct access right to delete the product');
@@ -153,7 +159,7 @@ const Products = () => {
               </NavLink>
             </div>
 
-            <div className="grid 2xl:grid-cols-6 grid-cols-4  border-t border-stroke py-4.5 px-4 dark:border-strokedark sm:grid-cols-8 md:px-6 2xl:px-7.5">
+            <div className="grid grid-cols-6 grid-cols-4  border-t border-stroke py-4.5 px-4 dark:border-strokedark sm:grid-cols-8 md:px-6 2xl:px-7.5">
               <div className="col-span-2 flex items-center">
                 <p className="font-medium">Product Name</p>
               </div>
@@ -174,7 +180,7 @@ const Products = () => {
             {filteredProducts.length > 0 ? (
               filteredProducts.map((product, key) => (
                 <div
-                  className="grid 2xl:grid-cols-6 grid-cols-4 border-t border-stroke py-4.5 px-4 dark:border-strokedark sm:grid-cols-8 md:px-6 2xl:px-7.5"
+                  className="grid grid-cols-6 grid-cols-4 border-t border-stroke py-4.5 px-4 dark:border-strokedark sm:grid-cols-8 md:px-6 2xl:px-7.5"
                   key={key}
                   onDoubleClick={() => handleEditProduct(product)}
                 >
@@ -199,7 +205,7 @@ const Products = () => {
                     </p>
                   </div>
                   <div className=" hidden sm:flex col-span-1 items-center">
-                    <p className={`text-sm ${product.quantity === 0 ? "text-orange-500" : "text-black dark:text-white"}  `}>{product.quantity === 0 ? "Out of stock" : product.quantity + " left"} </p>
+                    <p className={`text-sm ${product.quantity <= 0 ? "text-orange-500" : "text-black dark:text-white"}  `}>{product.quantity <= 0 ? "Out of stock" : product.quantity + " left"} </p>
                   </div>
                   <div className="col-span-1 flex items-center">
 
