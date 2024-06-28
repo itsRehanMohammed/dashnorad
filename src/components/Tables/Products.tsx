@@ -6,9 +6,9 @@ import { NavLink, useLocation } from 'react-router-dom';
 import ProductForm from '../../pages/ProductForm';
 
 
-export const ConfirmDeleteModal = ({ isOpen, onCancel, onDelete, text, actionName }) => {
+export const ConfirmDeleteModal = ({ isOpen, onCancel, onDelete, text, actionName, className }) => {
   return (
-    <div className={`absolute top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center ${isOpen ? 'visible' : 'hidden'}`}>
+    <div className={`fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center ${isOpen ? 'visible' : 'hidden'}`}>
       <div className="bg-white p-8 rounded-md shadow-md">
         <p className="text-xl text-black font-semibold mb-4">{text ? text : "Are you sure you want to delete this product?"}</p>
         <div className="flex justify-end">

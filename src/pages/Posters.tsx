@@ -52,6 +52,7 @@ const Posters = () => {
             srNo: '',
             path: '',
         });
+        setIsEditSlide(false)
     };
     const handleAddCategory = async (e: { preventDefault: () => void }) => {
         e.preventDefault();
@@ -626,13 +627,15 @@ const Posters = () => {
                                     <button
                                         className="flex justify-center rounded  py-2 px-6 font-medium text-black hover:shadow-1 dark:border-strokedark dark:text-white"
                                         type="button"
-                                        onClick={() =>
+                                        onClick={() => {
                                             setCategoryFormData({
                                                 name: '',
                                                 img: { name: '', url: '' },
                                                 srNo: '',
                                                 path: '',
                                             })
+                                            setIsEditCategory(false)
+                                        }
                                         }
                                     >
                                         Clear

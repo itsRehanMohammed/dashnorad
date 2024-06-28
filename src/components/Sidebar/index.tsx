@@ -397,7 +397,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                                 (isActive && '!text-white')
                               }
                             >
-                              Sign Up
+                              Add a user
                             </NavLink>
                           </li>
                         </ul>
